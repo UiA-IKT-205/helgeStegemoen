@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     var timeToCountDownInMs = 5000L
     val timeTicks = 1000L
+    val oneMinute = 60000L
+    var isTimerRunning = false  //
 
 
 
@@ -33,22 +35,18 @@ class MainActivity : AppCompatActivity() {
         ninetyMinutesButton = findViewById<Button>(R.id.ninetyMinutesButton)
         twoHoursButton = findViewById<Button>(R.id.twoHoursButton)
 
-        thirtyMinuteButton.setOnClickListener(){
-            setTimer(3000L)
-        }
-        oneHourButton.setOnClickListener(){
-            setTimer(6000L)
-        }
-        ninetyMinutesButton.setOnClickListener(){
-            setTimer(9000L)
-        }
-        twoHoursButton.setOnClickListener(){
-            setTimer(12000L)
-        }
+        thirtyMinuteButton.setOnClickListener(){ setTimer(30*oneMinute) }
+        oneHourButton.setOnClickListener(){ setTimer(60*oneMinute) }
+        ninetyMinutesButton.setOnClickListener(){ setTimer(90*oneMinute) }
+        twoHoursButton.setOnClickListener(){ setTimer(120*oneMinute) }
 
         startButton = findViewById<Button>(R.id.startCountdownButton)
         startButton.setOnClickListener(){
-           startCountDown(it)
+            // Avoid running multiple timers at the same time
+            if(!isTimerRunning){
+                startCountDown(it)
+            }
+
         }
         coutdownDisplay = findViewById<TextView>(R.id.countDownView)
 
@@ -56,17 +54,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startCountDown(v: View){
+        isTimerRunning = true
 
         timer = object : CountDownTimer(timeToCountDownInMs,timeTicks) {
             override fun onFinish() {
                 Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
+                isTimerRunning = false
             }
 
             override fun onTick(millisUntilFinished: Long) {
                updateCountDownDisplay(millisUntilFinished)
             }
         }
-
         timer.start()
     }
 
