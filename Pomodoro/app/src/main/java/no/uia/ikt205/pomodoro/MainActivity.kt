@@ -13,20 +13,45 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var timer:CountDownTimer
     lateinit var startButton:Button
+    lateinit var thirtyMinuteButton:Button
+    lateinit var oneHourButton:Button
+    lateinit var ninetyMinutesButton:Button
+    lateinit var twoHoursButton:Button
     lateinit var coutdownDisplay:TextView
 
-    val timeToCountDownInMs = 5000L
+    var timeToCountDownInMs = 5000L
     val timeTicks = 1000L
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-       startButton = findViewById<Button>(R.id.startCountdownButton)
-       startButton.setOnClickListener(){
+        thirtyMinuteButton = findViewById<Button>(R.id.thirtyMinutesButton)
+        oneHourButton = findViewById<Button>(R.id.oneHourButton)
+        ninetyMinutesButton = findViewById<Button>(R.id.ninetyMinutesButton)
+        twoHoursButton = findViewById<Button>(R.id.twoHoursButton)
+
+        thirtyMinuteButton.setOnClickListener(){
+            setTimer(3000L)
+        }
+        oneHourButton.setOnClickListener(){
+            setTimer(6000L)
+        }
+        ninetyMinutesButton.setOnClickListener(){
+            setTimer(9000L)
+        }
+        twoHoursButton.setOnClickListener(){
+            setTimer(12000L)
+        }
+
+        startButton = findViewById<Button>(R.id.startCountdownButton)
+        startButton.setOnClickListener(){
            startCountDown(it)
-       }
-       coutdownDisplay = findViewById<TextView>(R.id.countDownView)
+        }
+        coutdownDisplay = findViewById<TextView>(R.id.countDownView)
+
 
     }
 
@@ -47,6 +72,10 @@ class MainActivity : AppCompatActivity() {
 
     fun updateCountDownDisplay(timeInMs:Long){
         coutdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
+    }
+
+    fun setTimer(timeInMs:Long){
+        timeToCountDownInMs = timeInMs
     }
 
 }
