@@ -54,7 +54,7 @@
         android:id="@+id/twoHoursButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="90 min"
+        android:text="120 min"
         app:layout_constraintStart_toEndOf="@+id/ninetyMinutesButton"
         app:layout_constraintTop_toTopOf="parent" />
 
