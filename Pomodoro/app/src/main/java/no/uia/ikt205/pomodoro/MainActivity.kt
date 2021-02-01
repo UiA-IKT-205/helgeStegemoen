@@ -31,11 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Got help from:
         // https://abhiandroid.com/ui/seekbar (using SeekBar)
         // https://www.geeksforgeeks.org/seekbar-in-kotlin/ (progressChangedValue variable)
-        // ## The app crashed every time i tried to use the TimerFunction. I tried to use a cast
-        // such as setTimer(progressChangedValue as Long), and I think that is what caused probelms.
-        // So I created a new function, so I created the castIntToLong() function, that did the
-        // casting for me.*/
-        // ToDo: Try to find out how to use cast
+        */
         val seek = findViewById<SeekBar>(R.id.seekBar)
         seek?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -55,8 +51,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity,
                 "Progress is: " + progressChangedValue + "%",
                 Toast.LENGTH_SHORT).show()
-                castIntToLong(progressChangedValue)
-                //setTimer(progressChangedValue)
+                setTimer(oneMinute * progressChangedValue.toLong())
             }
         })
 
@@ -96,11 +91,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setTimer(timeInMs: Long){
         timeToCountDownInMs = timeInMs
+        // Updates the time when the timer is updated
+        updateCountDownDisplay(timeInMs)
     }
-
-    fun castIntToLong(myVar: Int){
-        var longVariable = 1L * myVar * oneMinute
-        setTimer(longVariable)
-    }
-
 }
