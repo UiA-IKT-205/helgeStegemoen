@@ -16,6 +16,37 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/repititionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/countDownView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pauseSeekBar" />
+
+    <SeekBar
+        android:id="@+id/workSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:max="30"
+        android:min="1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="50dp" />
+
+
+    <SeekBar
+        android:id="@+id/pauseSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:max="30"
+        android:min="1"
+        app:layout_constraintTop_toBottomOf="@+id/workSeekBar"
+        tools:layout_editor_absoluteX="83dp" />
+
     <Button
         android:id="@+id/startCountdownButton"
         android:layout_width="wrap_content"
@@ -25,38 +56,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/countDownView" />
-
-    <Button
-        android:id="@+id/thirtyMinutesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="30 min"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/oneHourButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="60 min"
-        app:layout_constraintStart_toEndOf="@+id/thirtyMinutesButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/ninetyMinutesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="90 min"
-        app:layout_constraintStart_toEndOf="@+id/oneHourButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/twoHoursButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="120 min"
-        app:layout_constraintStart_toEndOf="@+id/ninetyMinutesButton"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
