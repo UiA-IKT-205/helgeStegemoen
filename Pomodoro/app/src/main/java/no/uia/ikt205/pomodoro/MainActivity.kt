@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import no.uia.ikt205.pomodoro.util.millisecondsToDescriptiveTime
 
@@ -16,19 +17,23 @@ class MainActivity : AppCompatActivity() {
     lateinit var pauseTimer:CountDownTimer
     lateinit var startButton:Button
     lateinit var countdownDisplay:TextView
+    lateinit var repititionText:TextView
 
     var workCountDownTimeInMs = 5000L
     var pauseCountDownTimeInMs = 0L
     val timeTicks = 1000L
-    val oneMinute = 6000L
+    val oneMinute = 60000L   // 60000L = one minute
     var isTimerRunning = false  //
-    var repitions = 1
+    var numberOfRepititions:Int = 0
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        repititionText = findViewById<Button>(R.id.repititionText)
+        // numberOfRepititions = repititionText.text.toString().toInt()
 
         /* Code for SeekBar
         // Got help from:
@@ -85,12 +90,10 @@ class MainActivity : AppCompatActivity() {
 
         startButton = findViewById<Button>(R.id.startCountdownButton)
         startButton.setOnClickListener(){
+            numberOfRepititions = repititionText.text.toString().toInt()
             // Avoid running multiple timers at the same time
             if(!isTimerRunning){
                 startCountDown(it)
-                if(repitions > 0)
-                    for (i in 0..repitions)
-                        startCountDown(it)
             }
 
         }
@@ -124,6 +127,11 @@ class MainActivity : AppCompatActivity() {
             override fun onFinish() {
                 Toast.makeText(this@MainActivity, "Pausen er ferdig", Toast.LENGTH_SHORT).show()
                 isTimerRunning = false
+                if(numberOfRepititions > 0){
+                    numberOfRepititions--
+                    startCountDown(v)
+                }
+                isTimerRunning = false
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -132,8 +140,6 @@ class MainActivity : AppCompatActivity() {
         }
         pauseTimer.start()
     }
-
-
 
     fun updateCountDownDisplay(timeInMs: Long){
         countdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
