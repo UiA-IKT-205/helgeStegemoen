@@ -17,15 +17,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/workSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
-        android:max="300"
-        android:min="15"
-        app:layout_constraintBottom_toTopOf="@+id/countDownView"
+        android:max="30"
+        android:min="1"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="50dp" />
+
+
+    <SeekBar
+        android:id="@+id/pauseSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:max="30"
+        android:min="1"
+        app:layout_constraintBottom_toTopOf="@+id/countDownView"
+        app:layout_constraintTop_toBottomOf="@+id/workSeekBar"
+        app:layout_constraintVertical_bias="0.846"
+        tools:layout_editor_absoluteX="83dp" />
 
     <Button
         android:id="@+id/startCountdownButton"

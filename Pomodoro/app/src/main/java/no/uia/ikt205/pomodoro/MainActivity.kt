@@ -13,13 +13,16 @@ import no.uia.ikt205.pomodoro.util.millisecondsToDescriptiveTime
 class MainActivity : AppCompatActivity() {
 
     lateinit var timer:CountDownTimer
+    lateinit var pauseTimer:CountDownTimer
     lateinit var startButton:Button
-    lateinit var coutdownDisplay:TextView
+    lateinit var countdownDisplay:TextView
 
-    var timeToCountDownInMs = 5000L
+    var workCountDownTimeInMs = 5000L
+    var pauseCountDownTimeInMs = 0L
     val timeTicks = 1000L
-    val oneMinute = 60000L
+    val oneMinute = 6000L
     var isTimerRunning = false  //
+    var repitions = 1
 
 
 
@@ -32,15 +35,15 @@ class MainActivity : AppCompatActivity() {
         // https://abhiandroid.com/ui/seekbar (using SeekBar)
         // https://www.geeksforgeeks.org/seekbar-in-kotlin/ (progressChangedValue variable)
         */
-        val seek = findViewById<SeekBar>(R.id.seekBar)
-        seek?.setOnSeekBarChangeListener(object :
+        val workSeekBar = findViewById<SeekBar>(R.id.workSeekBar)
+        workSeekBar?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
-            var progressChangedValue = 0
+            var workTimeInMinutes = 0
             override fun onProgressChanged(
                 seek: SeekBar,
                 progress: Int, fromUser: Boolean
             ) {
-                progressChangedValue = progress;
+                workTimeInMinutes = progress;
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -49,9 +52,33 @@ class MainActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 Toast.makeText(this@MainActivity,
-                "Progress is: " + progressChangedValue + "%",
+                "Progress is: " + workTimeInMinutes + "%",
                 Toast.LENGTH_SHORT).show()
-                setTimer(oneMinute * progressChangedValue.toLong())
+                setWorkTimer(oneMinute * workTimeInMinutes.toLong())
+            }
+        })
+
+        // Pause countdown
+        val pauseSeekBar = findViewById<SeekBar>(R.id.pauseSeekBar)
+        pauseSeekBar?.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+            var workTimeInMinutes = 0
+            override fun onProgressChanged(
+                    seek: SeekBar,
+                    progress: Int, fromUser: Boolean
+            ) {
+                workTimeInMinutes = progress;
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Write custom code for progress is started
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Toast.makeText(this@MainActivity,
+                        "Progress is: " + workTimeInMinutes + "%",
+                        Toast.LENGTH_SHORT).show()
+                setPauseTimer(oneMinute * workTimeInMinutes.toLong())
             }
         })
 
@@ -61,10 +88,13 @@ class MainActivity : AppCompatActivity() {
             // Avoid running multiple timers at the same time
             if(!isTimerRunning){
                 startCountDown(it)
+                if(repitions > 0)
+                    for (i in 0..repitions)
+                        startCountDown(it)
             }
 
         }
-        coutdownDisplay = findViewById<TextView>(R.id.countDownView)
+        countdownDisplay = findViewById<TextView>(R.id.countDownView)
 
 
     }
@@ -72,26 +102,53 @@ class MainActivity : AppCompatActivity() {
     fun startCountDown(v: View){
         isTimerRunning = true
 
-        timer = object : CountDownTimer(timeToCountDownInMs, timeTicks) {
+            timer = object : CountDownTimer(workCountDownTimeInMs, timeTicks) {
+                override fun onFinish() {
+                    Toast.makeText(this@MainActivity, "Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
+                    isTimerRunning = false
+                    if(pauseCountDownTimeInMs > 0)
+                        startPauseTimer(v)
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    updateCountDownDisplay(millisUntilFinished)
+                }
+            }
+            timer.start()
+        }
+
+        fun startPauseTimer(v: View){
+            isTimerRunning = true
+
+            pauseTimer = object : CountDownTimer(pauseCountDownTimeInMs, timeTicks) {
             override fun onFinish() {
-                Toast.makeText(this@MainActivity, "Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Pausen er ferdig", Toast.LENGTH_SHORT).show()
                 isTimerRunning = false
             }
 
             override fun onTick(millisUntilFinished: Long) {
-               updateCountDownDisplay(millisUntilFinished)
+                updateCountDownDisplay(millisUntilFinished)
             }
         }
-        timer.start()
+        pauseTimer.start()
     }
+
+
 
     fun updateCountDownDisplay(timeInMs: Long){
-        coutdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
+        countdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
     }
 
-    fun setTimer(timeInMs: Long){
-        timeToCountDownInMs = timeInMs
+    fun setWorkTimer(workInMs: Long){
+        workCountDownTimeInMs = workInMs
         // Updates the time when the timer is updated
-        updateCountDownDisplay(timeInMs)
+        updateCountDownDisplay(workInMs)
     }
+    fun setPauseTimer(pauseInMs: Long){
+        pauseCountDownTimeInMs = pauseInMs
+        // Updates the time when the timer is updated
+        updateCountDownDisplay(pauseInMs)
+    }
+
+
 }
