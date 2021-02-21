@@ -1,12 +1,10 @@
 package com.example.superpiano
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 
@@ -21,6 +19,8 @@ class PianoLayout : Fragment() {
     private val binding get() = _binding!!
 
     private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
+    private val halfTones = listOf("C#", "D#", "0", "F#", "G#", "A#", "0", "C2#", "D2#", "F2#")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -52,6 +52,22 @@ class PianoLayout : Fragment() {
             }
 
             ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
+        }
+
+        halfTones.forEach(){
+            // newInstance() uses HalfTonePianoKeyFragment.kt's companion object to set up
+            // properties
+            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+
+            halfTonePianoKey.onKeyDown = {
+                println("Piano key down $it")
+            }
+
+            halfTonePianoKey.onKeyUp = {
+                println("Piano key up $it")
+            }
+
+            ft.add(view.pianoKeys.id,halfTonePianoKey,"note_$it")
         }
 
         ft.commit()
