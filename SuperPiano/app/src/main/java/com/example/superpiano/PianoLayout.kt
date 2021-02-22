@@ -9,7 +9,6 @@ import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 
 class PianoLayout : Fragment() {
-    // build.gradle(module) feature viewBinding, enables the FragmentPianoLayoutBinding class for us
     /* View binding is a feature that allows you to more easily write code that interacts with
     views. Once view binding is enabled in a module, it generates a binding class for each
     XML layout file present in that module. An instance of a binding class contains direct
@@ -18,8 +17,8 @@ class PianoLayout : Fragment() {
     private var _binding:FragmentPianoLayoutBinding? = null
     private val binding get() = _binding!!
 
-    private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
-    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")
+    /*private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
+    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")*/
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
             "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
@@ -38,11 +37,9 @@ class PianoLayout : Fragment() {
         val view = binding.root
 
         val fm = childFragmentManager
-        val ft = fm.beginTransaction()  // starts a series of edit operations
+        val ft = fm.beginTransaction()
 
         allTones.forEach(){
-            // newInstance() uses FullTonePianoKeyFragment.kt's companion object to set up
-            // properties
             val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
             val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
 
@@ -68,71 +65,7 @@ class PianoLayout : Fragment() {
                 }
                 ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
             }
-
-
-
-            //
         }
-
-        /*
-        halfTones.forEach() {
-            // newInstance() uses HalfTonePianoKeyFragment.kt's companion object to set up
-            // properties
-            if (it != "0") {
-                val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
-
-                halfTonePianoKey.onKeyDown = {
-                    println("Piano key down $it")
-                }
-
-                halfTonePianoKey.onKeyUp = {
-                    println("Piano key up $it")
-                }
-
-                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$it")
-            }
-        }*/
-
-    /*
-        val fm2 = childFragmentManager
-        val ft2 = fm2.beginTransaction()  // starts a series of edit operations
-       fullTones.forEach(){
-            // newInstance() uses FullTonePianoKeyFragment.kt's companion object to set up
-            // properties
-            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
-
-            fullTonePianoKey.onKeyDown = {
-                println("Piano key down $it")
-            }
-
-            fullTonePianoKey.onKeyUp = {
-                println("Piano key up $it")
-            }
-
-            ft2.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
-        }*/
-
-
-
-        // using FullTonePianoKeyFragment
-        /*halfTones.forEach(){
-            // newInstance() uses HalfTonePianoKeyFragment.kt's companion object to set up
-            // properties
-            if(it != "0"){
-                val halfTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
-
-                halfTonePianoKey.onKeyDown = {
-                    println("Piano key down $it")
-                }
-
-                halfTonePianoKey.onKeyUp = {
-                    println("Piano key up $it")
-                }
-
-                ft.add(view.pianoKeys.id,halfTonePianoKey,"note_$it")
-            }
-
-        } */
 
         ft.commit()
 

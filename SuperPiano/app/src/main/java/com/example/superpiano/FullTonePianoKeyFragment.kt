@@ -16,8 +16,7 @@ class FullTonePianoKeyFragment : Fragment() {
     private lateinit var note:String
 
     /* ((note:String) -> Unit) is a function declaration,that takes in a String parameter, and
-    // returns something Unit (something undeclared, kinda like a void)
-    // Sets that as nullable, because it's not certain yet if we're going to implement them
+    // returns something/Unit (kinda like void)
     // val lambdaName : Type = { argumentList -> codeBody }*/
     var onKeyDown:((note:String) -> Unit)? = null
     var onKeyUp:((note:String) -> Unit)? = null
@@ -25,8 +24,6 @@ class FullTonePianoKeyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            /* Uses elvis operator (?:) since String is nullable
-            // Could also have used an if else statement*/
             note = it.getString("NOTE") ?: "?" // if(it..) else "?" | lambda
         }
     }
