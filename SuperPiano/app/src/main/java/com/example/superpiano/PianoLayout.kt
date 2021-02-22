@@ -19,7 +19,9 @@ class PianoLayout : Fragment() {
     private val binding get() = _binding!!
 
     private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
-    private val halfTones = listOf("C#", "D#", "0", "F#", "G#", "A#", "0", "C2#", "D2#", "F2#")
+    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")
+    private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+            "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,63 @@ class PianoLayout : Fragment() {
         val fm = childFragmentManager
         val ft = fm.beginTransaction()  // starts a series of edit operations
 
-        fullTones.forEach(){
+        allTones.forEach(){
+            // newInstance() uses FullTonePianoKeyFragment.kt's companion object to set up
+            // properties
+            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
+            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+
+            val pattern = ".*#".toRegex()
+
+            if(pattern.containsMatchIn(it)){
+                halfTonePianoKey.onKeyDown = {
+                    println("Piano key down $it")
+                }
+
+                halfTonePianoKey.onKeyUp = {
+                    println("Piano key up $it")
+                }
+                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$it")
+
+            } else {
+                fullTonePianoKey.onKeyDown = {
+                    println("Piano key down $it")
+                }
+
+                fullTonePianoKey.onKeyUp = {
+                    println("Piano key up $it")
+                }
+                ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
+            }
+
+
+
+            //
+        }
+
+        /*
+        halfTones.forEach() {
+            // newInstance() uses HalfTonePianoKeyFragment.kt's companion object to set up
+            // properties
+            if (it != "0") {
+                val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+
+                halfTonePianoKey.onKeyDown = {
+                    println("Piano key down $it")
+                }
+
+                halfTonePianoKey.onKeyUp = {
+                    println("Piano key up $it")
+                }
+
+                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$it")
+            }
+        }*/
+
+    /*
+        val fm2 = childFragmentManager
+        val ft2 = fm2.beginTransaction()  // starts a series of edit operations
+       fullTones.forEach(){
             // newInstance() uses FullTonePianoKeyFragment.kt's companion object to set up
             // properties
             val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
@@ -51,24 +109,30 @@ class PianoLayout : Fragment() {
                 println("Piano key up $it")
             }
 
-            ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
-        }
+            ft2.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
+        }*/
 
-        halfTones.forEach(){
+
+
+        // using FullTonePianoKeyFragment
+        /*halfTones.forEach(){
             // newInstance() uses HalfTonePianoKeyFragment.kt's companion object to set up
             // properties
-            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+            if(it != "0"){
+                val halfTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
 
-            halfTonePianoKey.onKeyDown = {
-                println("Piano key down $it")
+                halfTonePianoKey.onKeyDown = {
+                    println("Piano key down $it")
+                }
+
+                halfTonePianoKey.onKeyUp = {
+                    println("Piano key up $it")
+                }
+
+                ft.add(view.pianoKeys.id,halfTonePianoKey,"note_$it")
             }
 
-            halfTonePianoKey.onKeyUp = {
-                println("Piano key up $it")
-            }
-
-            ft.add(view.pianoKeys.id,halfTonePianoKey,"note_$it")
-        }
+        } */
 
         ft.commit()
 
