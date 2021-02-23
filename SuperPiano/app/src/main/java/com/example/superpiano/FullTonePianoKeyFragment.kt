@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.example.superpiano.databinding.FragmentFullTonePianoKeyBinding
+// ToDO: sjekk om denne inkluden trengs eller om det er noe annet gale i koden
 import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
 
 class FullTonePianoKeyFragment : Fragment() {
@@ -15,8 +16,7 @@ class FullTonePianoKeyFragment : Fragment() {
     private lateinit var note:String
 
     /* ((note:String) -> Unit) is a function declaration,that takes in a String parameter, and
-    // returns something Unit (something undeclared, kinda like a void)
-    // Sets that as nullable, because it's not certain yet if we're going to implement them
+    // returns something/Unit (kinda like void)
     // val lambdaName : Type = { argumentList -> codeBody }*/
     var onKeyDown:((note:String) -> Unit)? = null
     var onKeyUp:((note:String) -> Unit)? = null
@@ -24,8 +24,6 @@ class FullTonePianoKeyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            /* Uses elvis operator (?:) since String is nullable
-            // Could also have used an if else statement*/
             note = it.getString("NOTE") ?: "?" // if(it..) else "?" | lambda
         }
     }
