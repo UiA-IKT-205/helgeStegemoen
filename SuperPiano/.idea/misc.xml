@@ -5,10 +5,10 @@
       <map>
         <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/drawable/halftoneshape.xml" value="0.8" />
         <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/drawable/pianokeyshape.xml" value="0.8" />
-        <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/activity_main.xml" value="0.8" />
+        <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/activity_main.xml" value="0.30293159609120524" />
         <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/fragment_full_tone_piano_key.xml" value="0.8" />
         <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/fragment_half_tone_piano_key.xml" value="0.8" />
-        <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/fragment_piano_layout.xml" value="0.8" />
+        <entry key="..\:/Users/hsteg/ikt205g21v/GitHub_repository/SuperPiano/app/src/main/res/layout/fragment_piano_layout.xml" value="0.1" />
       </map>
     </option>
   </component>
