@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.example.superpiano.data.Note
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
+import java.io.File
+import java.io.FileOutputStream
 
 class PianoLayout : Fragment() {
     /* View binding is a feature that allows you to more easily write code that interacts with
@@ -41,14 +43,14 @@ class PianoLayout : Fragment() {
         val fm = childFragmentManager
         val ft = fm.beginTransaction()
 
-        allTones.forEach(){
-            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
-            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+        allTones.forEach(){ orgNoteValue ->
+            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
+            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
             var startPlay: Long =0
 
             val pattern = ".*#".toRegex()
 
-            if(pattern.containsMatchIn(it)){
+            if(pattern.containsMatchIn(orgNoteValue)){
                 halfTonePianoKey.onKeyDown = {
                     startPlay = System.nanoTime()
                     println("Piano key down $it")
@@ -60,7 +62,7 @@ class PianoLayout : Fragment() {
                     score.add(note)
                     println("Piano key up $it")
                 }
-                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$it")
+                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$orgNoteValue")
 
             } else {
                 fullTonePianoKey.onKeyDown = {
@@ -74,11 +76,26 @@ class PianoLayout : Fragment() {
                     score.add(note)
                     println("Piano key up $it")
                 }
-                ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
+            }
+                ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
+            }
+            ft.commit()
+
+        view.saveScoreBt.setOnClickListener {
+            var fileName = view.fileNameTextEdit.text.toString()
+            val path = this.activity?.getExternalFilesDir(null)
+            if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
+                fileName = "$fileName.musikk"
+                FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
+                    // buffered writer level here
+                    score.forEach {
+                        writer.write("${it.toString()}\n")
+                    }
+                }
+            } else {
+                // ToDo: What to do?
             }
         }
-
-        ft.commit()
 
         return view
     }
