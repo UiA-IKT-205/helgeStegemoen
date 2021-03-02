@@ -47,12 +47,16 @@ class PianoLayout : Fragment() {
             val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
             val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
             var startPlay: Long =0
+            var isPlaying = true
 
             val pattern = ".*#".toRegex()
 
             if(pattern.containsMatchIn(orgNoteValue)){
                 halfTonePianoKey.onKeyDown = {
-                    startPlay = System.nanoTime()
+                    if(isPlaying == true){
+                        startPlay = System.nanoTime()
+                    }
+
                     println("Piano key down $it")
                 }
 
@@ -89,11 +93,9 @@ class PianoLayout : Fragment() {
                 FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
                     // buffered writer level here
                     score.forEach {
-                        writer.write("${it.toString()}\n")
+                        writer.write("${it}\n")
                     }
                 }
-            } else {
-                // ToDo: What to do?
             }
         }
 
