@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.superpiano.data.Note
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 import java.io.File

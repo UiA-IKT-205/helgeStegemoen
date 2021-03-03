@@ -42,7 +42,8 @@ class HalfTonePianoKeyFragment : Fragment() {
         })
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_half_tone_piano_key, container, false)
+        //return inflater.inflate(R.layout.fragment_half_tone_piano_key, container, false)
+        return view
     }
 
     companion object {

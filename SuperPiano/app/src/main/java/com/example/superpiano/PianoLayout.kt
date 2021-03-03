@@ -5,8 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.superpiano.data.Note
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
+import java.io.File
+import java.io.FileOutputStream
 
 class PianoLayout : Fragment() {
     /* View binding is a feature that allows you to more easily write code that interacts with
@@ -16,6 +19,7 @@ class PianoLayout : Fragment() {
     binding replaces findViewById. */
     private var _binding:FragmentPianoLayoutBinding? = null
     private val binding get() = _binding!!
+    private var score:MutableList<Note> = mutableListOf<Note>()
 
     /*private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
     private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")*/
@@ -31,7 +35,7 @@ class PianoLayout : Fragment() {
        LayoutInflater: Instantiates a layout XML file into its corresponding View object.
        ViewGroup: A ViewGroup is a special view that can contain other views (called children.)*/
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPianoLayoutBinding.inflate(layoutInflater)
         val view = binding.root
@@ -39,35 +43,61 @@ class PianoLayout : Fragment() {
         val fm = childFragmentManager
         val ft = fm.beginTransaction()
 
-        allTones.forEach(){
-            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(it)
-            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(it)
+        allTones.forEach(){ orgNoteValue ->
+            val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
+            val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
+            var startPlay: Long =0
+            var isPlaying = true
 
             val pattern = ".*#".toRegex()
 
-            if(pattern.containsMatchIn(it)){
+            if(pattern.containsMatchIn(orgNoteValue)){
                 halfTonePianoKey.onKeyDown = {
+                    if(isPlaying == true){
+                        startPlay = System.nanoTime()
+                    }
+
                     println("Piano key down $it")
                 }
 
                 halfTonePianoKey.onKeyUp = {
+                    var endPlay = System.nanoTime()
+                    val note = Note(it, startPlay, endPlay)
+                    score.add(note)
                     println("Piano key up $it")
                 }
-                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$it")
+                ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$orgNoteValue")
 
             } else {
                 fullTonePianoKey.onKeyDown = {
+                    startPlay = System.nanoTime()
                     println("Piano key down $it")
                 }
 
                 fullTonePianoKey.onKeyUp = {
+                    var endPlay = System.nanoTime()
+                    val note = Note(it, startPlay, endPlay)
+                    score.add(note)
                     println("Piano key up $it")
                 }
-                ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$it")
+            }
+                ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
+            }
+            ft.commit()
+
+        view.saveScoreBt.setOnClickListener {
+            var fileName = view.fileNameTextEdit.text.toString()
+            val path = this.activity?.getExternalFilesDir(null)
+            if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
+                fileName = "$fileName.musikk"
+                FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
+                    // buffered writer level here
+                    score.forEach {
+                        writer.write("${it}\n")
+                    }
+                }
             }
         }
-
-        ft.commit()
 
         return view
     }

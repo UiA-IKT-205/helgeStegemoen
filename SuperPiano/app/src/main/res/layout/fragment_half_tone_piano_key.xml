@@ -9,7 +9,7 @@
     <Button
         android:id="@+id/halfToneKey"
         android:text="#"
-        android:layout_width="27dp"
+        android:layout_width="20dp"
         android:layout_height="200dp"
         android:backgroundTint="@color/black"
         android:background="@drawable/pianokeyshape"

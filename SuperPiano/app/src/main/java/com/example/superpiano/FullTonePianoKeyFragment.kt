@@ -29,8 +29,8 @@ class FullTonePianoKeyFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFullTonePianoKeyBinding.inflate(inflater)
         val view = binding.root
@@ -50,16 +50,18 @@ class FullTonePianoKeyFragment : Fragment() {
         })
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_full_tone_piano_key, container, false)
+        //return inflater.inflate(R.layout.fragment_full_tone_piano_key, container, false)
+
+        return view
     }
 
     companion object {
         @JvmStatic
         fun newInstance(note: String) =
-            FullTonePianoKeyFragment().apply {
-                arguments = Bundle().apply {
-                    putString("NOTE", note)
+                FullTonePianoKeyFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("NOTE", note)
+                    }
                 }
-            }
     }
 }
