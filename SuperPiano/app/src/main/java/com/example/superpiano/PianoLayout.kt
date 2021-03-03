@@ -21,6 +21,9 @@ class PianoLayout : Fragment() {
     private val binding get() = _binding!!
     private var score:MutableList<Note> = mutableListOf<Note>()
 
+    private var musicStart:Long = 0
+    private var isPlaying:Boolean = false
+
     /*private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
     private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")*/
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -47,21 +50,21 @@ class PianoLayout : Fragment() {
             val fullTonePianoKey = FullTonePianoKeyFragment.newInstance(orgNoteValue)
             val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
             var startPlay: Long =0
-            var isPlaying = true
 
             val pattern = ".*#".toRegex()
 
             if(pattern.containsMatchIn(orgNoteValue)){
                 halfTonePianoKey.onKeyDown = {
-                    if(isPlaying == true){
-                        startPlay = System.nanoTime()
+                    if(!isPlaying){
+                        startMusic()
+                    } else {
+                        startPlay = System.nanoTime() - musicStart
                     }
-
                     println("Piano key down $it")
                 }
 
                 halfTonePianoKey.onKeyUp = {
-                    var endPlay = System.nanoTime()
+                    var endPlay = System.nanoTime() - musicStart
                     val note = Note(it, startPlay, endPlay)
                     score.add(note)
                     println("Piano key up $it")
@@ -70,7 +73,11 @@ class PianoLayout : Fragment() {
 
             } else {
                 fullTonePianoKey.onKeyDown = {
-                    startPlay = System.nanoTime()
+                    if(!isPlaying){
+                        startMusic()
+                    } else {
+                        startPlay = System.nanoTime() - musicStart
+                    }
                     println("Piano key down $it")
                 }
 
@@ -101,4 +108,9 @@ class PianoLayout : Fragment() {
 
         return view
     }
+    private fun startMusic(){
+        musicStart = System.nanoTime()
+        isPlaying = true
+    }
+
 }
