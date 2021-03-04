@@ -1,6 +1,7 @@
 package com.example.superpiano
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -93,17 +94,18 @@ class PianoLayout : Fragment() {
             }
             ft.commit()
 
+        // Sjekk om det finnes bedre maate aa aapne filen paa (sjekk video-forelesning)
         view.saveScoreBt.setOnClickListener {
             var fileName = view.fileNameTextEdit.text.toString()
             val path = this.activity?.getExternalFilesDir(null)
 
             if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
-                //fileName = "$fileName.musikk"
-                // Check is file exists, before adding prefix
-                if(File(path,"$fileName.musikk").exists()){
+                // Add prefix and change name if file already exists
+                if(!File(path,"$fileName.music").exists()){
+                    fileName = "$fileName.music"
+                } else { // if fileName already exist, add System.nanoTime() to end of name
                     fileName = "$fileName" + System.nanoTime().toString() + ".music"
-                } else {
-                    fileName = "$fileName.musikk"
+                    Log.d("saveScoreBt", "Filename already exists, saving to $fileName instead: ")
                 }
 
                 FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
@@ -111,6 +113,7 @@ class PianoLayout : Fragment() {
                     score.forEach {
                         writer.write("${it}\n")
                     }
+                    writer.close()
                 }
             }
         }
