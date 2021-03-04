@@ -10,6 +10,7 @@ import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files.exists
 
 class PianoLayout : Fragment() {
     /* View binding is a feature that allows you to more easily write code that interacts with
@@ -95,8 +96,16 @@ class PianoLayout : Fragment() {
         view.saveScoreBt.setOnClickListener {
             var fileName = view.fileNameTextEdit.text.toString()
             val path = this.activity?.getExternalFilesDir(null)
+
             if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
-                fileName = "$fileName.musikk"
+                //fileName = "$fileName.musikk"
+                // Check is file exists, before adding prefix
+                if(File(path,"$fileName.musikk").exists()){
+                    fileName = "$fileName" + System.nanoTime().toString() + ".music"
+                } else {
+                    fileName = "$fileName.musikk"
+                }
+
                 FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
                     // buffered writer level here
                     score.forEach {
