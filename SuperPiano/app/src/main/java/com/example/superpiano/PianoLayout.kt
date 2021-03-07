@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.superpiano.data.Note
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
+import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
+import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.view.*
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -30,10 +32,6 @@ class PianoLayout : Fragment() {
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
             "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
-    /*
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }*/
 
     /* onCreateView(LayoutInflater, ViewGroup, Bundle) creates and returns the view hierarchy
        associated with the fragment.
@@ -53,6 +51,7 @@ class PianoLayout : Fragment() {
             val halfTonePianoKey = HalfTonePianoKeyFragment.newInstance(orgNoteValue)
             var startPlay: Long =0
 
+
             val pattern = ".*#".toRegex()
 
             if(pattern.containsMatchIn(orgNoteValue)){
@@ -62,14 +61,14 @@ class PianoLayout : Fragment() {
                     } else {
                         startPlay = System.nanoTime() - musicStart
                     }
-                    println("Piano key down $it")
+                    println("Piano key down $it / id = " + view.halfToneKey.id)
                 }
 
                 halfTonePianoKey.onKeyUp = {
                     val endPlay = System.nanoTime() - musicStart
                     val note = Note(it, startPlay, endPlay)
                     score.add(note)
-                    println("Piano key up $it")
+                    println("Piano key up $it / id = " + view.halfToneKey.id)
                 }
                 ft.add(view.pianoKeys.id, halfTonePianoKey, "note_$orgNoteValue")
 
@@ -80,43 +79,32 @@ class PianoLayout : Fragment() {
                     } else {
                         startPlay = System.nanoTime() - musicStart
                     }
-                    println("Piano key down $it")
+                    println("Piano key down $it / id = " + view.fullToneKey.id)
                 }
 
                 fullTonePianoKey.onKeyUp = {
                     val endPlay = System.nanoTime()
                     val note = Note(it, startPlay, endPlay)
                     score.add(note)
-                    println("Piano key up $it")
+                    println("Piano key up $it / id = " + view.fullToneKey.id)
                 }
-            }
                 ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
+            }
+               // ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
             }
             ft.commit()
 
         // Sjekk om det finnes bedre maate aa aapne filen paa (sjekk video-forelesning)
         view.saveScoreBt.setOnClickListener {
-            var fileName = view.fileNameTextEdit.text.toString()
+            var fileName:String = "unknown"
+            if(view.fileNameTextEdit.text.toString()!=""){
+                fileName = view.fileNameTextEdit.text.toString()
+            }
+            if(fileName == ""){
+                fileName = "Unknown"
+            }
             val path = this.activity?.getExternalFilesDir(null)
             saveToFile(score as ArrayList<Note>, fileName)
-        /*
-            if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
-                // Add prefix and change name if file already exists
-                if(!File(path,"$fileName.music").exists()){
-                    fileName = "$fileName.music"
-                } else { // if fileName already exist, add System.nanoTime() to end of name
-                    fileName = fileName + System.nanoTime() + ".music"
-                    Log.d("saveScoreBt", "Filename already exists, saving to $fileName instead: ")
-                }
-
-                FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
-                    // buffered writer level here
-                    score.forEach {
-                        writer.write("${it}\n")
-                    }
-                    writer.close()
-                }
-            }*/
         }
 
         return view
@@ -126,7 +114,7 @@ class PianoLayout : Fragment() {
         isPlaying = true
     }
 
-    public fun saveToFile(notes: ArrayList<Note>, filename: String):Long{//(notes: mutableListOf<note>()){
+    fun saveToFile(notes: ArrayList<Note>, filename: String){//(notes: mutableListOf<note>()){
         var fileName = filename
         val path = this.activity?.getExternalFilesDir(null)
 
@@ -147,7 +135,8 @@ class PianoLayout : Fragment() {
                 writer.close()
             }
         }
-        return 99
+        // Removes all notes from the score-list
+        score.clear()
     }
 
 }
