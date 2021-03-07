@@ -11,7 +11,6 @@ import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_piano_layout.view.*
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.file.Files.exists
 
 class PianoLayout : Fragment() {
     /* View binding is a feature that allows you to more easily write code that interacts with
@@ -21,7 +20,7 @@ class PianoLayout : Fragment() {
     binding replaces findViewById. */
     private var _binding:FragmentPianoLayoutBinding? = null
     private val binding get() = _binding!!
-    private var score:MutableList<Note> = mutableListOf<Note>()
+    private var score = mutableListOf<Note>()
 
     private var musicStart:Long = 0
     private var isPlaying:Boolean = false
@@ -31,9 +30,10 @@ class PianoLayout : Fragment() {
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
             "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
+    /*
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
+    }*/
 
     /* onCreateView(LayoutInflater, ViewGroup, Bundle) creates and returns the view hierarchy
        associated with the fragment.
@@ -41,7 +41,7 @@ class PianoLayout : Fragment() {
        ViewGroup: A ViewGroup is a special view that can contain other views (called children.)*/
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPianoLayoutBinding.inflate(layoutInflater)
         val view = binding.root
 
@@ -66,7 +66,7 @@ class PianoLayout : Fragment() {
                 }
 
                 halfTonePianoKey.onKeyUp = {
-                    var endPlay = System.nanoTime() - musicStart
+                    val endPlay = System.nanoTime() - musicStart
                     val note = Note(it, startPlay, endPlay)
                     score.add(note)
                     println("Piano key up $it")
@@ -84,7 +84,7 @@ class PianoLayout : Fragment() {
                 }
 
                 fullTonePianoKey.onKeyUp = {
-                    var endPlay = System.nanoTime()
+                    val endPlay = System.nanoTime()
                     val note = Note(it, startPlay, endPlay)
                     score.add(note)
                     println("Piano key up $it")
@@ -98,13 +98,14 @@ class PianoLayout : Fragment() {
         view.saveScoreBt.setOnClickListener {
             var fileName = view.fileNameTextEdit.text.toString()
             val path = this.activity?.getExternalFilesDir(null)
-
+            saveToFile(score as ArrayList<Note>, fileName)
+        /*
             if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
                 // Add prefix and change name if file already exists
                 if(!File(path,"$fileName.music").exists()){
                     fileName = "$fileName.music"
                 } else { // if fileName already exist, add System.nanoTime() to end of name
-                    fileName = "$fileName" + System.nanoTime().toString() + ".music"
+                    fileName = fileName + System.nanoTime() + ".music"
                     Log.d("saveScoreBt", "Filename already exists, saving to $fileName instead: ")
                 }
 
@@ -115,7 +116,7 @@ class PianoLayout : Fragment() {
                     }
                     writer.close()
                 }
-            }
+            }*/
         }
 
         return view
@@ -123,6 +124,30 @@ class PianoLayout : Fragment() {
     private fun startMusic(){
         musicStart = System.nanoTime()
         isPlaying = true
+    }
+
+    public fun saveToFile(notes: ArrayList<Note>, filename: String):Long{//(notes: mutableListOf<note>()){
+        var fileName = filename
+        val path = this.activity?.getExternalFilesDir(null)
+
+        if(notes.count() > 0 && fileName.isNotEmpty() && path != null) {
+            // Add prefix and change name if file already exists
+            if(!File(path,"$fileName.music").exists()){
+                fileName = "$fileName.music"
+            } else { // if fileName already exist, add System.nanoTime() to end of name
+                fileName = fileName + System.nanoTime() + ".music"
+                Log.d("saveScoreBt", "Filename already exists, saving to $fileName instead: ")
+            }
+
+            FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
+                // buffered writer level here
+                notes.forEach {
+                    writer.write("${it}\n")
+                }
+                writer.close()
+            }
+        }
+        return 99
     }
 
 }
