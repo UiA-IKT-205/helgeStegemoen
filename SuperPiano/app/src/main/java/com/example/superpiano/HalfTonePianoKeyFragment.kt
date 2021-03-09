@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.example.superpiano.databinding.FragmentHalfTonePianoKeyBinding
-// ToDO: sjekk om denne inkluden trengs eller om det er noe annet gale i koden
 import kotlinx.android.synthetic.main.fragment_half_tone_piano_key.view.*
 
 class HalfTonePianoKeyFragment : Fragment() {

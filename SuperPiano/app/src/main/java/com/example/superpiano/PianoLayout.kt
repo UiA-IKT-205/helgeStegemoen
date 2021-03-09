@@ -23,12 +23,11 @@ class PianoLayout : Fragment() {
     private var _binding:FragmentPianoLayoutBinding? = null
     private val binding get() = _binding!!
     private var score = mutableListOf<Note>()
+    private val TAG:String = "SuperPiano.PianoLayout"
 
     private var musicStart:Long = 0
     private var isPlaying:Boolean = false
 
-    /*private val fullTones = listOf("C", "D", "E", "F", "G", "A", "B", "C2","D2", "E2", "F2", "G2")
-    private val halfTones = listOf("C#", "D#", "F#", "G#", "A#", "C2#", "D2#", "F2#")*/
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
             "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
@@ -90,53 +89,67 @@ class PianoLayout : Fragment() {
                 }
                 ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
             }
-               // ft.add(view.pianoKeys.id,fullTonePianoKey,"note_$orgNoteValue")
             }
             ft.commit()
 
-        // Sjekk om det finnes bedre maate aa aapne filen paa (sjekk video-forelesning)
         view.saveScoreBt.setOnClickListener {
-            var fileName:String = "unknown"
+            var fileName:String = ""
             if(view.fileNameTextEdit.text.toString()!=""){
                 fileName = view.fileNameTextEdit.text.toString()
             }
-            if(fileName == ""){
+            if(fileName == null || fileName == ""){
                 fileName = "Unknown"
             }
-            val path = this.activity?.getExternalFilesDir(null)
-            saveToFile(score as ArrayList<Note>, fileName)
-        }
 
+            // Add prefix and change name if file already exists
+            val path = this.activity?.getExternalFilesDir(null)
+            if(score.count() > 0 && fileName.isNotEmpty() && path != null) {
+                // Add prefix and change name if file already exists
+                if(!File(path,"$fileName.music").exists()){
+                    fileName = "$fileName.music"
+                } else { // if fileName already exist, add System.nanoTime() to end of name
+                    fileName = fileName + System.nanoTime() + ".music"
+                    Log.d("saveScoreBt", "Filename already exists, changing filename to $fileName instead: ")
+                    // ToDo: Use Toast or Snackbar to warn user
+                }
+                // Save the file
+                saveToFile(score as ArrayList<Note>, fileName, path)
+                // ToDo: use content instead, but first first fix it's newline problem (video: 1.09:45):
+                //  val content:String = score.map( it.toString()}.reduce { acc, s -> acc + s + "\n" }
+            } else if (path == null) {
+                Log.e(TAG, "Failed: path = null and no file was saved")
+            } else if (score.count() <= 0) {
+                Log.e(TAG, "Failed: score is empty and no file was saved")
+            }
+        }
         return view
     }
-    private fun startMusic(){
-        musicStart = System.nanoTime()
-        isPlaying = true
-    }
 
-    fun saveToFile(notes: ArrayList<Note>, filename: String){//(notes: mutableListOf<note>()){
+    fun saveToFile(notes: ArrayList<Note>, filename: String, filepath: File){//(notes: mutableListOf<note>()){
         var fileName = filename
-        val path = this.activity?.getExternalFilesDir(null)
+        val path = filepath
 
-        if(notes.count() > 0 && fileName.isNotEmpty() && path != null) {
-            // Add prefix and change name if file already exists
-            if(!File(path,"$fileName.music").exists()){
-                fileName = "$fileName.music"
-            } else { // if fileName already exist, add System.nanoTime() to end of name
-                fileName = fileName + System.nanoTime() + ".music"
-                Log.d("saveScoreBt", "Filename already exists, saving to $fileName instead: ")
-            }
-
+        if(path != null) {
             FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
-                // buffered writer level here
-                notes.forEach {
+                score.forEach {
                     writer.write("${it}\n")
                 }
                 writer.close()
             }
+        } else {
+            Log.e(TAG, "Could not get external path")
         }
-        // Removes all notes from the score-list
+        // Removes all notes from the score-list and gets ready for a new song
         score.clear()
+        isPlaying = false
     }
 
+    private fun upload() {
+        // ToDo: use Firebase storage
+    }
+
+    private fun startMusic(){
+        musicStart = System.nanoTime()
+        isPlaying = true
+    }
 }
