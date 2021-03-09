@@ -1,11 +1,13 @@
 package com.example.superpiano
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import com.example.superpiano.data.Note
 import com.example.superpiano.databinding.FragmentPianoLayoutBinding
 import kotlinx.android.synthetic.main.fragment_full_tone_piano_key.view.*
@@ -15,11 +17,10 @@ import java.io.File
 import java.io.FileOutputStream
 
 class PianoLayout : Fragment() {
-    /* View binding is a feature that allows you to more easily write code that interacts with
-    views. Once view binding is enabled in a module, it generates a binding class for each
-    XML layout file present in that module. An instance of a binding class contains direct
-    references to all views that have an ID in the corresponding layout. In most cases, view
-    binding replaces findViewById. */
+
+    // Can only use one onSave function (a new one would overwrite the older one)
+    var onSave:((file: Uri) -> Unit)? = null
+
     private var _binding:FragmentPianoLayoutBinding? = null
     private val binding get() = _binding!!
     private var score = mutableListOf<Note>()
@@ -31,11 +32,6 @@ class PianoLayout : Fragment() {
     private val allTones = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
             "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2")
 
-
-    /* onCreateView(LayoutInflater, ViewGroup, Bundle) creates and returns the view hierarchy
-       associated with the fragment.
-       LayoutInflater: Instantiates a layout XML file into its corresponding View object.
-       ViewGroup: A ViewGroup is a special view that can contain other views (called children.)*/
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -107,15 +103,17 @@ class PianoLayout : Fragment() {
                 // Add prefix and change name if file already exists
                 if(!File(path,"$fileName.music").exists()){
                     fileName = "$fileName.music"
-                } else { // if fileName already exist, add System.nanoTime() to end of name
+                } else { // Change filename to avoid over writing older file
                     fileName = fileName + System.nanoTime() + ".music"
                     Log.d("saveScoreBt", "Filename already exists, changing filename to $fileName instead: ")
-                    // ToDo: Use Toast or Snackbar to warn user
+                    // ToDo: Consider using Toast or Snackbar to warn user
                 }
-                // Save the file
+
                 saveToFile(score as ArrayList<Note>, fileName)
-                // ToDo: use content instead, but first first fix it's newline problem (video: 1.09:45):
+                // ToDo: To learn a bit about map-reduce, try to fix it's newline problem in the
+                //  code below, and use content instead (video lecture at 1.09.45):
                 //  val content:String = score.map( it.toString()}.reduce { acc, s -> acc + s + "\n" }
+
             } else if (path == null) {
                 Log.e(TAG, "Failed: path = null and no file was saved")
             } else if (score.count() <= 0) {
@@ -131,22 +129,20 @@ class PianoLayout : Fragment() {
         val path = this.activity?.getExternalFilesDir(null)
 
         if(path != null) {
-            FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
+            val file = File(path,fileName)
+            FileOutputStream(file, true).bufferedWriter().use { writer ->
                 score.forEach {
                     writer.write("${it}\n")
                 }
                 writer.close()
             }
+            this.onSave?.invoke(file.toUri())
         } else {
             Log.e(TAG, "Could not get external path")
         }
-        // Removes all notes from the score-list and gets ready for a new song
+        // Removes all notes from the score (notes) and makes the app ready for a new song
         score.clear()
         isPlaying = false
-    }
-
-    private fun upload() {
-        // ToDo: use Firebase storage (1:19:50 in video)
     }
 
     private fun startMusic(){
