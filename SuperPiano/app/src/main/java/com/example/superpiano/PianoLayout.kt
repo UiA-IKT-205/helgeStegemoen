@@ -113,7 +113,7 @@ class PianoLayout : Fragment() {
                     // ToDo: Use Toast or Snackbar to warn user
                 }
                 // Save the file
-                saveToFile(score as ArrayList<Note>, fileName, path)
+                saveToFile(score as ArrayList<Note>, fileName)
                 // ToDo: use content instead, but first first fix it's newline problem (video: 1.09:45):
                 //  val content:String = score.map( it.toString()}.reduce { acc, s -> acc + s + "\n" }
             } else if (path == null) {
@@ -125,9 +125,10 @@ class PianoLayout : Fragment() {
         return view
     }
 
-    fun saveToFile(notes: ArrayList<Note>, filename: String, filepath: File){//(notes: mutableListOf<note>()){
+    // Can add path as parameter, but not without changing the unit test saveFileTest()
+    fun saveToFile(notes: ArrayList<Note>, filename: String){//(notes: mutableListOf<note>()){
         var fileName = filename
-        val path = filepath
+        val path = this.activity?.getExternalFilesDir(null)
 
         if(path != null) {
             FileOutputStream(File(path,fileName), true).bufferedWriter().use { writer ->
@@ -145,7 +146,7 @@ class PianoLayout : Fragment() {
     }
 
     private fun upload() {
-        // ToDo: use Firebase storage
+        // ToDo: use Firebase storage (1:19:50 in video)
     }
 
     private fun startMusic(){
