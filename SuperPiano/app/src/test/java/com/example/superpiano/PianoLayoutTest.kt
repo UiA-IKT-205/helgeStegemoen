@@ -31,4 +31,7 @@ class PianoLayoutTest {
         pianoLayout.saveToFile(notes, "MyFile")
     }
 
+    // ToDo: Use the following tutorial to find out how the GUI can be tested with Espresso:
+    //  https://developer.android.com/codelabs/android-training-espresso-for-ui-testing#2
+
 }
