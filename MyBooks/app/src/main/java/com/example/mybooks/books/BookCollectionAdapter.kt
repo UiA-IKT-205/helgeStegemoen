@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mybooks.databinding.BookLayoutBinding
 
-// Dette er en recycler adapter
-class BookCollectionAdapter(private val books: MutableList<Book>): RecyclerView.Adapter<BookCollectionAdapter.ViewHolder>() {
+// Dette er en recycler adapter. onBookClicked trenger clickable=yes i book_layout.xml.
+class BookCollectionAdapter(private val books: MutableList<Book>,
+                            private val onBookClicked:(Book)->Unit)
+    : RecyclerView.Adapter<BookCollectionAdapter.ViewHolder>() {
 
     class ViewHolder(val binding:BookLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(book: Book){
@@ -28,5 +30,11 @@ class BookCollectionAdapter(private val books: MutableList<Book>): RecyclerView.
     // Trenger ikke være Card, kan returnere forskjellige views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(BookLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    }
+
+    public fun updateCollection(newBooks:List<Book>){   // Trenger ikke være mutable
+        books.clear()
+        books.addAll(newBooks)
+        notifyDataSetChanged()  // Funksjon som er del av alle adapter, som sier nå må du oppdatere
     }
 }

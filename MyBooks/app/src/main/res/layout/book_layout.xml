@@ -2,9 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="false"
-    android:focusable="false"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -13,16 +13,16 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Forfatter" />
-
-        <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Tittel" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Forfatter" />
 
         <TextView
             android:id="@+id/published"
