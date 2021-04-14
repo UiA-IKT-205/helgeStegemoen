@@ -1,0 +1,102 @@
+{ 
+	"todolistCollection":[
+		{
+			"listName": "Handleliste",
+			"ListItems": [
+				{
+					"itemName": "Egg",
+					"checked": true
+				},
+				{
+					"itemName": "Melk",
+					"checked": false
+				},
+				{
+					"itemName": "3 x Farris",
+					"checked": false
+				},
+				{
+					"itemName": "Avacado",
+					"checked": false
+				}
+			]	
+		},
+		{
+			"listName": "Julegaver",
+			"ListItems": [
+				{
+					"itemName": "Nintendo Switch",
+					"checked": false
+				},
+				{
+					"itemName": "Super Mario Odyssey",
+					"checked": false
+				},
+				{
+					"itemName": "Acer Nitro",
+					"checked": false
+				},
+				{
+					"itemName": "The Matrix DVD",
+					"checked": false
+				}
+			]
+		},
+		{
+			"listName": "Must see filmer",
+			"ListItems": [
+				{
+					"itemName": "Julegave2",
+					"checked": false
+				},
+				{
+					"itemName": "Forrest Gump",
+					"checked": false
+				},
+				{
+					"itemName": "Aliens",
+					"checked": false
+				},
+				{
+					"itemName": "Terminator 2: Judgement Day",
+					"checked": false
+				},
+				{
+					"itemName": "Pulp Fiction",
+					"checked": false
+				},
+				{
+					"itemName": "Godfellas",
+					"checked": false
+				}
+			]
+		},
+		{
+			"listName": "Fjelltopper",
+			"ListItems": [
+				{
+					"itemName": "Himmelbjerget",
+					"checked": false
+				},
+				{
+					"itemName": "Mount Everest",
+					"checked": false
+				},
+				{
+					"itemName": "Olympus Mons",
+					"checked": false
+				},
+				{
+					"itemName": "Jotunheimen",
+					"checked": false
+				}
+			]
+		},
+		{
+			"listName": "Bucketlist",
+			"ListItems": [
+				
+			]
+		}
+	]
+}
